@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from src.modules.functional import maybe_script
 
 
-@functools.lru_cache
+@functools.lru_cache()
 def get_butterfly_indices(
     out_features: int,
     in_features: int,
