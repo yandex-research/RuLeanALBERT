@@ -172,7 +172,7 @@ class LeanAlbertModel(GradientCheckpointingMixin, PreTrainedModel):
         device = input_ids.device if input_ids is not None else inputs_embeds.device
 
         if attention_mask is None:
-            attention_mask = torch.ones(input_shape, device=device)
+            attention_mask = torch.ones(input_shape, device=device, dtype=int)
         assert not torch.is_floating_point(attention_mask), "model requires boolean or int mask with binary 0/1 entries"
 
         if token_type_ids is None:
@@ -306,11 +306,14 @@ class LeanAlbertForPreTraining(GradientCheckpointingMixin, PreTrainedModel):
         sop_scores = self.sop_classifier(pooled_output)
 
         total_loss = None
-        if labels is not None and sentence_order_label is not None:
+        if labels is not None:
             loss_fct = nn.CrossEntropyLoss()
             masked_lm_loss = loss_fct(prediction_scores.view(-1, self.config.vocab_size), labels.view(-1))
-            sentence_order_loss = loss_fct(sop_scores.view(-1, 2), sentence_order_label.view(-1))
-            total_loss = masked_lm_loss + sentence_order_loss
+            if sentence_order_label is not None:
+                sentence_order_loss = loss_fct(sop_scores.view(-1, 2), sentence_order_label.view(-1))
+                total_loss = masked_lm_loss + sentence_order_loss
+            else:
+                total_loss = masked_lm_loss
 
         if not return_dict:
             output = (prediction_scores, sop_scores) + outputs[2:]
