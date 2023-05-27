@@ -7,12 +7,12 @@ numpy==1.22.3
 pandas==1.4.3
 pymorphy2==0.9.1
 razdel==0.5.0
-requests==2.25.1
+requests==2.31.0
 scikit-learn==1.0.2
 sentencepiece==0.1.96
 termcolor==1.1.0
 tokenizers==0.12.1
 torch>=1.8.0
 torch_optimizer==0.1.0
-transformers==4.21.3
+transformers==4.30.0
 wandb==0.12.1
