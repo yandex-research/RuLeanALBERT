@@ -172,7 +172,8 @@ class LeanAlbertModel(GradientCheckpointingMixin, PreTrainedModel):
 
         if attention_mask is None:
             attention_mask = torch.ones(input_shape, device=device, dtype=int)
-        assert not torch.is_floating_point(attention_mask), "model requires boolean or int mask with binary 0/1 entries"
+        else:
+            assert not torch.is_floating_point(attention_mask), "The model requires boolean or int mask with 0/1 entries"
 
         if token_type_ids is None:
             if hasattr(self.embeddings, "token_type_ids"):
